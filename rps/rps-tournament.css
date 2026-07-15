@@ -1,0 +1,562 @@
+/* Rock Paper Scissors Tournament — embedded slide */
+
+.rps-tournament {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 2rem 4rem;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 0%, rgba(59, 130, 246, 0.08), transparent 55%), #0a0e17;
+}
+
+.rps-title {
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: #e8ecf4;
+  text-shadow: 0 0 40px rgba(59, 130, 246, 0.25);
+}
+
+.rps-subtitle {
+  font-size: clamp(0.95rem, 2vw, 1.2rem);
+  color: #9aa8be;
+  margin-top: 0.35rem;
+  text-align: center;
+}
+
+.rps-status {
+  font-size: 0.85rem;
+  color: #6b7a94;
+  margin-top: 1rem;
+  letter-spacing: 0.04em;
+}
+
+.rps-status--pulse {
+  animation: rps-pulse 2s ease infinite;
+}
+
+@keyframes rps-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.rps-main {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  align-items: stretch;
+  min-height: 0;
+}
+
+.rps-qr-panel {
+  flex-shrink: 0;
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.rps-qr-panel.visible {
+  width: 240px;
+  opacity: 1;
+}
+
+.rps-qr-panel img {
+  width: 200px;
+  height: 200px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: #fff;
+}
+
+.rps-room-code {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: #f0b429;
+  font-variant-numeric: tabular-nums;
+}
+
+.rps-join-url {
+  font-size: 0.65rem;
+  color: #6b7a94;
+  word-break: break-all;
+  text-align: center;
+  max-width: 220px;
+}
+
+.rps-player-count {
+  font-size: 0.8rem;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.rps-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.rps-players {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  max-height: 120px;
+  overflow-y: auto;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.rps-player-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  background: rgba(22, 29, 46, 0.9);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  color: #e8ecf4;
+  animation: rps-chip-in 0.4s ease;
+}
+
+@keyframes rps-chip-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.rps-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.rps-bracket-wrap {
+  flex: 1;
+  width: 100%;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rps-bracket-wrap.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.rps-bracket-wrap.hidden-bracket {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.rps-bracket {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.rps-bracket-round {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 0.75rem;
+}
+
+.rps-match {
+  min-width: 140px;
+  padding: 0.5rem 0.65rem;
+  background: rgba(15, 21, 32, 0.9);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 6px;
+  font-size: 0.7rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.rps-match.active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
+}
+
+.rps-match.final {
+  border-color: #f0b429;
+  box-shadow: 0 0 24px rgba(240, 180, 41, 0.3);
+  min-width: 200px;
+  padding: 0.75rem;
+}
+
+.rps-match-player {
+  padding: 0.25rem 0;
+  color: #9aa8be;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rps-match-player.winner {
+  color: #f0b429;
+  font-weight: 700;
+}
+
+.rps-match-player .pick {
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.rps-match.reveal .pick { opacity: 1; }
+
+.rps-arena {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.rps-arena-players {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.rps-arena-side {
+  text-align: center;
+}
+
+.rps-arena-name {
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 700;
+  color: #e8ecf4;
+}
+
+.rps-arena-vs {
+  font-size: 1.2rem;
+  color: #6b7a94;
+  font-weight: 300;
+}
+
+.rps-arena-picks {
+  font-size: 3rem;
+  margin-top: 0.5rem;
+  min-height: 4rem;
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.rps-arena-msg {
+  font-size: 0.9rem;
+  color: #6b7a94;
+  margin-top: 0.75rem;
+}
+
+.rps-fun-fact {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #f0b429;
+  font-weight: 600;
+  animation: rps-pulse 1s ease 2;
+}
+
+.rps-champion {
+  text-align: center;
+  animation: rps-champ-in 0.8s ease;
+}
+
+@keyframes rps-champ-in {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.rps-champion-trophy {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+}
+
+.rps-champion-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #f0b429;
+}
+
+.rps-champion-name {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: #e8ecf4;
+  text-shadow: 0 0 60px rgba(240, 180, 41, 0.4);
+}
+
+.rps-building {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 600;
+  color: #3b82f6;
+  animation: rps-pulse 1.2s ease infinite;
+}
+
+.rps-confetti-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.rps-countdown {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #f0b429;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Match countdown ring */
+.rps-timer {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 1rem;
+}
+
+.rps-timer-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.rps-timer-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 6;
+}
+
+.rps-timer-fill {
+  fill: none;
+  stroke: #f0b429;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 264;
+  transition: stroke-dashoffset 0.9s linear;
+}
+
+.rps-timer-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #f0b429;
+}
+
+.rps-ready {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #6b7a94;
+  padding: 2rem;
+}
+
+.rps-ready p { animation: rps-pulse 2s ease infinite; }
+
+.rps-sound-hint {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 1rem;
+  opacity: 0.4;
+  z-index: 5;
+}
+
+.rps-end-btn {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  padding: 0.55rem 1.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #0a0e17;
+  background: #f0b429;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.rps-end-btn:hover {
+  filter: brightness(1.08);
+}
+
+.rps-end-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.rps-sound-status {
+  font-size: 0.55rem;
+  color: #6b7a94;
+}
+
+.rps-match-player.submitted {
+  color: #3b82f6;
+}
+
+.rps-match-player.submitted .pick {
+  opacity: 1;
+  color: #3b82f6;
+  font-size: 0.85rem;
+}
+
+.rps-match.done .pick { opacity: 1; }
+
+.rps-arena-side.submitted .rps-arena-name {
+  color: #3b82f6;
+}
+
+.rps-arena-side.submitted .rps-locked {
+  color: #4ade80;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.rps-hidden {
+  color: #6b7a94;
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+.rps-arena-picks.revealed {
+  animation: rps-flip-in 0.5s ease;
+}
+
+@keyframes rps-flip-in {
+  from { transform: rotateY(90deg); opacity: 0; }
+  to { transform: rotateY(0); opacity: 1; }
+}
+
+.rps-arena-side.winner .rps-arena-picks {
+  animation: rps-pulse-win 0.7s ease infinite alternate;
+  filter: drop-shadow(0 0 16px rgba(240, 180, 41, 0.5));
+}
+
+.rps-arena-side.loser {
+  opacity: 0.4;
+  transform: scale(0.9);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.rps-arena-side.tie-bounce .rps-arena-picks {
+  animation: rps-bounce 0.5s ease infinite alternate;
+}
+
+@keyframes rps-pulse-win {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+@keyframes rps-bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-4px); }
+}
+
+.rps-arena--reveal .rps-arena-players {
+  animation: rps-arena-pop 0.4s ease;
+}
+
+@keyframes rps-arena-pop {
+  from { transform: scale(0.95); opacity: 0.5; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Presenter admin — hidden from audience styling via small corner */
+.rps-admin {
+  position: fixed;
+  bottom: 4rem;
+  left: 1rem;
+  z-index: 2100;
+  background: rgba(6, 8, 15, 0.95);
+  border: 1px solid rgba(240, 180, 41, 0.4);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.65rem;
+  color: #9aa8be;
+  max-width: 220px;
+  line-height: 1.6;
+}
+
+.rps-admin.hidden { display: none; }
+
+.rps-admin kbd {
+  display: inline-block;
+  padding: 0.1rem 0.3rem;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  color: #f0b429;
+  font-size: 0.6rem;
+}
+
+.rps-admin-toggle {
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.6rem;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #9aa8be;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.rps-admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.5rem 0;
+}
+
+.rps-admin-btn {
+  padding: 0.25rem 0.45rem;
+  font-size: 0.55rem;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #9aa8be;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.rps-admin-btn:hover {
+  color: #e8ecf4;
+  border-color: #3b82f6;
+}
+
+@media (max-width: 768px) {
+  .rps-main { flex-direction: column; }
+  .rps-qr-panel.visible { width: 100%; }
+}

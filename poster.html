@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hidden Challenge — Lunch & Learn Poster</title>
+  <style>
+    @page {
+      size: letter portrait;
+      margin: 0.75in;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: #0a0e17;
+      color: #e8ecf4;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .poster {
+      max-width: 7.5in;
+      width: 100%;
+      background: linear-gradient(160deg, #0f1520 0%, #161d2e 100%);
+      border: 3px solid #f0b429;
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .poster h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #3b82f6, #f0b429);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .prize {
+      font-size: 1.5rem;
+      color: #f0b429;
+      font-weight: 700;
+      margin: 1rem 0 2rem;
+    }
+
+    .clues-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #9aa8be;
+      margin-bottom: 1.5rem;
+    }
+
+    .clue-list {
+      list-style: none;
+      text-align: left;
+      max-width: 400px;
+      margin: 0 auto 2rem;
+    }
+
+    .clue-list li {
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      font-size: 1.15rem;
+      color: #e8ecf4;
+    }
+
+    .clue-list li span {
+      color: #3b82f6;
+      font-weight: 700;
+      margin-right: 0.5rem;
+    }
+
+    .no-hints {
+      font-size: 1.1rem;
+      color: #5c6b82;
+      font-style: italic;
+      margin-top: 1rem;
+    }
+
+    .footer {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #5c6b82;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .poster {
+        box-shadow: none;
+        border-width: 2px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .print-btn {
+        display: none;
+      }
+    }
+
+    .print-btn {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .print-btn:hover {
+      background: #2563eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <h1>Hidden Challenge</h1>
+    <p class="prize">First person to solve today's puzzle wins $50.</p>
+
+    <p class="clues-label">Clues:</p>
+    <ol class="clue-list">
+      <li><span>1.</span> Ochocinco</li>
+      <li><span>2.</span> Three quarters</li>
+      <li><span>3.</span> What do you trade on Wall Street?</li>
+    </ol>
+
+    <p class="no-hints">No hints. Good luck.</p>
+
+    <p class="footer">Lunch &amp; Learn — You Don't Know What You Know</p>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">Print Poster</button>
+</body>
+</html>

@@ -1,0 +1,358 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0a0e17;
+  color: #e8ecf4;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.join-app {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2rem;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.join-screen--center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.join-header { text-align: center; margin-bottom: 1.5rem; }
+
+.join-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.join-room {
+  font-size: 0.7rem;
+  color: #f0b429;
+  letter-spacing: 0.2em;
+  margin-top: 0.35rem;
+  font-weight: 600;
+}
+
+.join-tournament-status {
+  font-size: 0.75rem;
+  color: #6b7a94;
+  text-align: center;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.join-round {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #3b82f6;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.75rem;
+}
+
+.join-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.join-form label {
+  font-size: 0.8rem;
+  color: #9aa8be;
+}
+
+.join-form input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.15rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: #161d2e;
+  color: #e8ecf4;
+}
+
+.join-btn-primary {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  background: #3b82f6;
+  color: #fff;
+  cursor: pointer;
+}
+
+.join-btn-primary:active { transform: scale(0.98); }
+
+.join-hint {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6b7a94;
+  margin-top: 1rem;
+}
+
+.join-big-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.join-match {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.5rem;
+}
+
+.join-opponent-label {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #6b7a94;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.join-opponent {
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #e8ecf4;
+  margin: 0.25rem 0 1rem;
+}
+
+/* Countdown ring */
+.join-timer {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1.25rem;
+}
+
+.join-timer-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.join-timer-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 8;
+}
+
+.join-timer-fill {
+  fill: none;
+  stroke: #f0b429;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 326.7;
+  transition: stroke-dashoffset 0.9s linear;
+}
+
+.join-timer-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: #f0b429;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pick buttons — thumb-friendly */
+.join-pick-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.join-pick-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  min-height: 72px;
+  padding: 0.85rem 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: 3px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: #161d2e;
+  color: #e8ecf4;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s, background 0.15s;
+}
+
+.join-pick-btn:active:not(:disabled) {
+  transform: scale(0.97);
+  background: #1e2840;
+}
+
+.join-pick-btn.selected {
+  border-color: #f0b429;
+  background: rgba(240, 180, 41, 0.12);
+  box-shadow: 0 0 20px rgba(240, 180, 41, 0.2);
+}
+
+.join-pick-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.join-pick-grid.locked .join-pick-btn:not(.selected) {
+  opacity: 0.3;
+}
+
+.join-pick-emoji {
+  font-size: 2.25rem;
+  line-height: 1;
+  width: 2.5rem;
+  text-align: center;
+}
+
+.join-pick-label {
+  flex: 1;
+  text-align: left;
+}
+
+/* Reveal animation */
+.join-reveal {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.join-versus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.join-versus-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.join-versus-emoji {
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+.join-versus-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #9aa8be;
+  text-align: center;
+}
+
+.join-versus-vs {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6b7a94;
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+}
+
+.join-versus-side.winner .join-versus-emoji {
+  animation: join-pulse-win 0.8s ease infinite alternate;
+  filter: drop-shadow(0 0 12px rgba(240, 180, 41, 0.6));
+}
+
+.join-versus-side.loser {
+  opacity: 0.35;
+  transform: scale(0.85) translateY(8px);
+}
+
+.join-versus-side.tie-bounce .join-versus-emoji {
+  animation: join-bounce 0.5s ease infinite alternate;
+}
+
+@keyframes join-pulse-win {
+  from { transform: scale(1); }
+  to { transform: scale(1.12); }
+}
+
+@keyframes join-bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-6px); }
+}
+
+.join-result-msg {
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.join-result-msg.win { color: #4ade80; }
+.join-result-msg.lose { color: #f87171; }
+.join-result-msg.tie { color: #f0b429; }
+
+.join-replay-msg {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f0b429;
+  margin-top: 2rem;
+  animation: join-pulse-text 1s ease infinite;
+}
+
+@keyframes join-pulse-text {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.join-reconnect {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.4rem 0.9rem;
+  background: rgba(240, 180, 41, 0.15);
+  border: 1px solid rgba(240, 180, 41, 0.4);
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  color: #f0b429;
+  z-index: 100;
+}
+
+.join-reconnect.hidden { display: none; }
+
+@media (min-width: 380px) {
+  .join-pick-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .join-pick-btn {
+    flex: 1 1 calc(33% - 0.5rem);
+    flex-direction: column;
+    min-height: 100px;
+    padding: 1rem 0.5rem;
+    gap: 0.35rem;
+  }
+  .join-pick-label { text-align: center; font-size: 0.8rem; }
+}

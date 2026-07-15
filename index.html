@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You Don't Know What You Know — Lunch & Learn</title>
+  <link rel="stylesheet" href="styles.css?v=20260715b">
+  <link rel="stylesheet" href="experimental/gallery.css?v=20260715b">
+  <link rel="stylesheet" href="rps/rps-tournament.css?v=20260715b">
+</head>
+<body>
+  <!-- Presenter HUD (toggle with P) -->
+  <aside id="presenter-hud" class="presenter-hud hidden" aria-hidden="true">
+    <div class="hud-header">
+      <span class="hud-title">Presenter HUD</span>
+      <span class="hud-slide-count"><span id="hud-current">1</span> / <span id="hud-total">19</span></span>
+    </div>
+    <div class="hud-notes" id="hud-notes"></div>
+    <div class="hud-controls">
+      <kbd>←</kbd><kbd>→</kbd><kbd>Space</kbd> navigate
+      <kbd>V</kbd> video panel
+      <kbd>1</kbd><kbd>2</kbd> videos
+      <kbd>H</kbd> hints <kbd>R</kbd> reset
+      <kbd>P</kbd> HUD <kbd>F</kbd> fullscreen <kbd>?</kbd> help <kbd>E</kbd> experiments
+    </div>
+  </aside>
+
+  <!-- Puzzle hint overlay -->
+  <div id="puzzle-overlay" class="puzzle-overlay hidden" aria-live="polite">
+    <div class="puzzle-hint-box">
+      <span class="puzzle-label">Hint <span id="hint-number">0</span></span>
+      <p id="hint-text"></p>
+    </div>
+  </div>
+
+  <!-- Attention Span Assist side panel -->
+  <aside id="video-panel" class="video-panel hidden" aria-label="Attention span assist panel">
+    <div class="video-panel-header">
+      <span>Attention Span Assist™</span>
+      <button id="close-panel" class="panel-close" aria-label="Close panel">×</button>
+    </div>
+    <div class="video-panel-body">
+      <div class="video-embed-wrap" id="video-embed-wrap">
+        <iframe
+          id="attention-video"
+          class="attention-video"
+          title="Attention Span Assist video"
+          src=""
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
+      </div>
+      <p class="video-panel-caption" id="loop-caption">Press 1, 2, or 3 to switch videos</p>
+    </div>
+  </aside>
+
+  <!-- Scene pagination chrome -->
+  <footer class="scene-nav" id="scene-nav" aria-label="Slide navigation">
+    <div class="progress-track" aria-hidden="true">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="scene-nav-inner">
+      <button type="button" class="nav-btn" id="btn-prev" aria-label="Previous slide">← Prev</button>
+      <span class="slide-pagination" id="slide-pagination" aria-live="polite">Slide 1 / 19</span>
+      <button type="button" class="nav-btn" id="btn-next" aria-label="Next slide">Next →</button>
+    </div>
+  </footer>
+
+  <!-- Keyboard help overlay (? key) -->
+  <div id="help-overlay" class="help-overlay hidden" role="dialog" aria-label="Keyboard shortcuts" aria-modal="true">
+    <div class="help-panel">
+      <div class="help-header">
+        <h2>Keyboard Shortcuts</h2>
+        <button type="button" class="help-close" id="help-close" aria-label="Close help">×</button>
+      </div>
+      <div class="help-grid">
+        <div class="help-section">
+          <h3>Navigation</h3>
+          <dl>
+            <dt><kbd>→</kbd> <kbd>Space</kbd></dt><dd>Next (reveal, then slide)</dd>
+            <dt><kbd>←</kbd></dt><dd>Previous</dd>
+            <dt><kbd>Home</kbd></dt><dd>First slide</dd>
+            <dt><kbd>End</kbd></dt><dd>Last slide / reference</dd>
+          </dl>
+        </div>
+        <div class="help-section">
+          <h3>Attention Assist</h3>
+          <dl>
+            <dt><kbd>V</kbd></dt><dd>Toggle side video panel</dd>
+            <dt><kbd>1</kbd> <kbd>2</kbd></dt><dd>Switch YouTube video</dd>
+          </dl>
+        </div>
+        <div class="help-section">
+          <h3>Puzzle</h3>
+          <dl>
+            <dt><kbd>H</kbd></dt><dd>Next hint</dd>
+            <dt><kbd>R</kbd></dt><dd>Reset hints</dd>
+          </dl>
+        </div>
+        <div class="help-section">
+          <h3>Experimental</h3>
+          <dl>
+            <dt><kbd>E</kbd></dt><dd>Open experiment gallery</dd>
+            <dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>Navigate experiments</dd>
+            <dt><kbd>Esc</kbd></dt><dd>Return to presentation</dd>
+          </dl>
+        </div>
+        <div class="help-section">
+          <h3>Presenter</h3>
+          <dl>
+            <dt><kbd>P</kbd></dt><dd>Toggle speaker HUD</dd>
+            <dt><kbd>F</kbd></dt><dd>Fullscreen</dd>
+            <dt><kbd>?</kbd></dt><dd>This help overlay</dd>
+          </dl>
+        </div>
+      </div>
+      <p class="help-footer">Press <kbd>?</kbd> or <kbd>Esc</kbd> to close</p>
+    </div>
+  </div>
+
+  <!-- Slide container — partials injected here -->
+  <main id="presentation" class="presentation">
+    <div id="slide-container" class="slide-container"></div>
+    <div id="slide-loading" class="slide-loading hidden" aria-live="polite">Loading slide…</div>
+  </main>
+
+  <script type="module" src="experimental/gallery.js?v=20260715b"></script>
+  <script src="rps/rps-host.js?v=20260715b"></script>
+  <script src="script.js?v=20260715b"></script>
+</body>
+</html>
