@@ -85,13 +85,31 @@ class RPSTournamentHost {
     return `${this.publicBase()}${path}?room=${c}`;
   }
 
-  qrUrl(text) {
-    // primary + notes in console if img fails (browser logs)
-    return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=12&data=${encodeURIComponent(text)}`;
-  }
-
-  qrUrlFallback(text) {
-    return `https://quickchart.io/qr?text=${encodeURIComponent(text)}&size=220&margin=2`;
+  /** Render QR into a mount node (no external image CDN — corporate filters kill those). */
+  paintQr(mountEl, text) {
+    if (!mountEl || !text) return;
+    mountEl.innerHTML = "";
+    if (typeof QRCode === "undefined") {
+      mountEl.innerHTML = `<p class="rps-qr-placeholder">QR lib missing — use link below</p>`;
+      rpsLog("QRCode lib not loaded");
+      return;
+    }
+    try {
+      // qrcodejs clears and draws into the element
+      // eslint-disable-next-line no-new
+      new QRCode(mountEl, {
+        text,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M,
+      });
+      rpsLog("QR painted", text);
+    } catch (err) {
+      rpsLog("QR paint failed", err);
+      mountEl.textContent = "QR failed — use link";
+    }
   }
 
   wsBase() {
@@ -472,9 +490,7 @@ class RPSTournamentHost {
     const soundIcon = s?.soundEnabled ? "🔊" : "🔇";
     const showQr = this.qrShow && s?.phase !== "champion";
     const qrBlock = url
-      ? `<img src="${this.qrUrl(url)}" alt="Join QR code" width="200" height="200"
-            data-fallback="${this.qrUrlFallback(url)}"
-            onerror="if(this.dataset.fallback&&this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}">
+      ? `<div class="rps-qr-mount" id="rps-qr-mount"></div>
           <div class="rps-room-code">${s.code || "····"}</div>
           <div class="rps-join-url">${url}</div>
           <div class="rps-player-count">${s.players?.length || 0} connected</div>`
@@ -497,6 +513,10 @@ class RPSTournamentHost {
       <div class="rps-sound-hint" title="Press M to toggle">${soundIcon}</div>
       <button type="button" class="rps-end-btn" id="rps-end-btn">End</button>
       <canvas class="rps-confetti-canvas" id="rps-confetti"></canvas>`;
+
+    if (url && showQr) {
+      this.paintQr(this.root.querySelector("#rps-qr-mount"), url);
+    }
 
     const endBtn = this.root.querySelector("#rps-end-btn");
     if (endBtn) {
