@@ -2,39 +2,44 @@
 
 Static presentation site. Contents of this folder = repo root for Pages.
 
-## Deploy
+## Deploy Pages
 
-1. Create a GitHub repo
-2. Copy **everything inside** `github/` to the repo root (not the `github` folder itself)
-3. Settings → Pages → Deploy from branch → `main` / root
-4. Optional: custom domain `lnl.jakehoke.com`
+1. Copy **everything inside** this folder to a GitHub repo root
+2. Settings → Pages → Deploy from branch → `main` / root
 
-Open `index.html` or your Pages URL. Press **F** for fullscreen.
+## Connect live RPS (Replit backend)
+
+1. Deploy the **full project** (not just this folder) on Replit — Run `python serve.py`
+2. Set Replit Secret `PUBLIC_BASE_URL` to your Repl HTTPS URL
+3. Edit `rps/config.js` in **this** Pages repo:
+
+```js
+window.RPS_BACKEND_URL = "https://YOUR-REPL.replit.app";
+```
+
+4. Push / redeploy Pages  
+5. Open deck → `#slide-18` — should connect. QR opens Replit `/join?room=CODE`
 
 | Link | Slide |
 |------|--------|
 | `#slide-18` | RPS tournament |
 | `#slide-19` | Q&A |
 
-Audience join: `join.html?room=CODE` (needs the live Python/Replit backend for WebSockets).
+Smoke-check API: `https://YOUR-REPL/api/health`
 
 ## Included
 
 | Path | Purpose |
 |------|---------|
 | `index.html` | Presentation shell |
-| `slides/` | Slide partials (19 visible + 1 hidden ref) |
+| `slides/` | Slide partials |
 | `styles.css` / `script.js` | Deck UI |
 | `experimental/` | Experiment gallery (`E`) |
-| `join.html` | Audience RPS join page (Pages entry) |
-| `rps/` | Tournament host + join clients |
+| `join.html` | Audience join (Pages path; optional) |
+| `rps/` | Tournament host + join + `config.js` |
 | `poster.html` | Puzzle poster |
-| `.nojekyll` | Forces GitHub Pages to skip Jekyll |
+| `.nojekyll` | Skip Jekyll |
 
-## Attention Span Assist
+## Not included
 
-Press `V` for the side panel. `1` / `2` switch muted autoplay YouTube embeds (IDs in `ATTENTION_VIDEOS` inside `script.js`).
-
-## Not included (backend)
-
-Python / Replit server stays outside this folder. Live RPS needs that API — slides and join UI still load standalone; the host **End** button advances to Q&A either way.
+Python server — lives in the parent project, run on Replit.

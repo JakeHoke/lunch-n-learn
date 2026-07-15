@@ -25,14 +25,29 @@ let reconnectAttempt = 0;
 let revealShownFor = null;
 
 async function loadConfig() {
+  const backend = (window.RPS_BACKEND_URL || "").replace(/\/$/, "");
+  const configUrl = backend ? `${backend}/api/config` : "/api/config";
   try {
-    const res = await fetch("/api/config");
+    const res = await fetch(configUrl);
+    if (!res.ok) throw new Error(`config ${res.status}`);
     config = await res.json();
+    if (backend) {
+      const wsProto = backend.startsWith("https") ? "wss" : "ws";
+      const host = backend.replace(/^https?:\/\//, "");
+      config.wsBaseUrl = `${wsProto}://${host}`;
+    }
     log(`Config: ${config.wsBaseUrl}`);
-  } catch {
-    config = {
-      wsBaseUrl: `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}`,
-    };
+  } catch (err) {
+    log(`Config failed: ${err}`);
+    if (backend) {
+      const wsProto = backend.startsWith("https") ? "wss" : "ws";
+      const host = backend.replace(/^https?:\/\//, "");
+      config = { wsBaseUrl: `${wsProto}://${host}` };
+    } else {
+      config = {
+        wsBaseUrl: `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}`,
+      };
+    }
   }
 }
 

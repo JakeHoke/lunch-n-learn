@@ -37,18 +37,40 @@ class RPSTournamentHost {
   }
 
   async loadConfig() {
+    const backend = (window.RPS_BACKEND_URL || "").replace(/\/$/, "");
+    const configUrl = backend ? `${backend}/api/config` : "/api/config";
     try {
-      const res = await fetch("/api/config");
+      const res = await fetch(configUrl);
+      if (!res.ok) throw new Error(`config ${res.status}`);
       this.config = await res.json();
+      if (backend) {
+        // Always prefer the configured backend for WS when Pages≠API
+        const wsProto = backend.startsWith("https") ? "wss" : "ws";
+        const host = backend.replace(/^https?:\/\//, "");
+        this.config.wsBaseUrl = `${wsProto}://${host}`;
+        this.config.apiBaseUrl = backend;
+      }
       rpsLog("Config loaded", this.config);
-    } catch {
-      const origin = location.origin;
-      const wsProto = location.protocol === "https:" ? "wss:" : "ws:";
-      this.config = {
-        publicBaseUrl: origin,
-        wsBaseUrl: `${wsProto}//${location.host}`,
-        joinPath: "/join",
-      };
+    } catch (err) {
+      rpsLog("Config fetch failed", err);
+      if (backend) {
+        const wsProto = backend.startsWith("https") ? "wss" : "ws";
+        const host = backend.replace(/^https?:\/\//, "");
+        this.config = {
+          publicBaseUrl: backend,
+          apiBaseUrl: backend,
+          wsBaseUrl: `${wsProto}://${host}`,
+          joinPath: "/join",
+        };
+      } else {
+        const origin = location.origin;
+        const wsProto = location.protocol === "https:" ? "wss:" : "ws:";
+        this.config = {
+          publicBaseUrl: origin,
+          wsBaseUrl: `${wsProto}//${location.host}`,
+          joinPath: "/join",
+        };
+      }
       rpsLog("Config fallback", this.config);
     }
     return this.config;
