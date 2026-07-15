@@ -73,6 +73,21 @@
   opacity: 1;
 }
 
+.rps-qr-placeholder {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px dashed rgba(255,255,255,0.2);
+  color: #9aa8be;
+  font-size: 0.85rem;
+  box-sizing: border-box;
+}
+
 .rps-qr-panel img {
   width: 200px;
   height: 200px;

@@ -27,6 +27,7 @@ class RPSTournamentHost {
     this.audioCtx = null;
     this.config = null;
     this.joinUrl = "";
+    this.qrShow = true; // client-side; show as soon as room exists (Q toggles)
     this.reconnectTimer = null;
     this.pingId = null;
     this._confettiDone = false;
@@ -85,7 +86,12 @@ class RPSTournamentHost {
   }
 
   qrUrl(text) {
+    // primary + notes in console if img fails (browser logs)
     return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=12&data=${encodeURIComponent(text)}`;
+  }
+
+  qrUrlFallback(text) {
+    return `https://quickchart.io/qr?text=${encodeURIComponent(text)}&size=220&margin=2`;
   }
 
   wsBase() {
@@ -256,7 +262,12 @@ class RPSTournamentHost {
     e.stopPropagation();
 
     switch (k) {
-      case "q": this.sendHost("toggle_qr"); break;
+      case "q":
+        this.qrShow = !this.qrShow;
+        this.sendHost("toggle_qr");
+        this.render();
+        rpsLog(`QR panel ${this.qrShow ? "shown" : "hidden"}`);
+        break;
       case "s": this.lockAndBuild(); break;
       case "r": this.resetTournament(); break;
       case "n": this.sendHost("advance"); break;
@@ -413,6 +424,13 @@ class RPSTournamentHost {
       this.root.innerHTML = `<h2 class="rps-title">Rock Paper Scissors Tournament</h2>
         <p class="rps-subtitle">Think you can beat everyone in the room?</p>
         <p class="rps-status rps-status--pulse">Connecting to server...</p>
+        <div class="rps-main">
+          <aside class="rps-qr-panel ${this.qrShow ? "visible" : ""}">
+            <div class="rps-qr-placeholder">Connecting…</div>
+            <div class="rps-join-url">QR appears when the room is ready</div>
+          </aside>
+          <div class="rps-center"></div>
+        </div>
         <button type="button" class="rps-end-btn" id="rps-end-btn">End</button>`;
       const endBtn = this.root.querySelector("#rps-end-btn");
       if (endBtn) {
@@ -449,23 +467,30 @@ class RPSTournamentHost {
       return `<div class="rps-player-chip"><span class="rps-avatar">${p.initials}</span><span>✓ ${p.name}</span></div>`;
     }).join("");
 
-    const url = this.buildJoinUrl(s.code) || s.joinUrl || this.joinUrl;
-    const statusCls = s.phase === "idle" ? "rps-status rps-status--pulse" : "rps-status";
-    const soundIcon = s.soundEnabled ? "🔊" : "🔇";
+    const url = (s?.code && this.buildJoinUrl(s.code)) || s?.joinUrl || this.joinUrl || "";
+    const statusCls = !s || s.phase === "idle" ? "rps-status rps-status--pulse" : "rps-status";
+    const soundIcon = s?.soundEnabled ? "🔊" : "🔇";
+    const showQr = this.qrShow && s?.phase !== "champion";
+    const qrBlock = url
+      ? `<img src="${this.qrUrl(url)}" alt="Join QR code" width="200" height="200"
+            data-fallback="${this.qrUrlFallback(url)}"
+            onerror="if(this.dataset.fallback&&this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}">
+          <div class="rps-room-code">${s.code || "····"}</div>
+          <div class="rps-join-url">${url}</div>
+          <div class="rps-player-count">${s.players?.length || 0} connected</div>`
+      : `<div class="rps-qr-placeholder">Connecting to server…</div>
+          <div class="rps-join-url">QR appears when the room is ready</div>`;
 
     this.root.innerHTML = `
       <h2 class="rps-title">Rock Paper Scissors Tournament</h2>
       <p class="rps-subtitle">Think you can beat everyone in the room?</p>
-      <p class="${statusCls}">${s.statusMessage || "Waiting for registration..."}</p>
+      <p class="${statusCls}">${s?.statusMessage || (s ? "Waiting for registration..." : "Connecting to server...")}</p>
       <div class="rps-main">
-        <aside class="rps-qr-panel ${s.qrVisible ? "visible" : ""}">
-          <img src="${this.qrUrl(url)}" alt="Join QR code" width="200" height="200">
-          <div class="rps-room-code">${s.code}</div>
-          <div class="rps-join-url">${url}</div>
-          <div class="rps-player-count">${s.players?.length || 0} connected</div>
+        <aside class="rps-qr-panel ${showQr ? "visible" : ""}">
+          ${qrBlock}
         </aside>
         <div class="rps-center">
-          ${players && s.phase !== "champion" ? `<div class="rps-players">${players}</div>` : ""}
+          ${players && s?.phase !== "champion" ? `<div class="rps-players">${players}</div>` : ""}
           ${center}
         </div>
       </div>
