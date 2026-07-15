@@ -9,7 +9,7 @@
  * Toggle logging with RPS_CONFIG_LOGGING.
  */
 const RPS_CONFIG_LOGGING = true;
-window.RPS_BACKEND_URL = "https://lunch-n-learn.replit.app"; // ← Pages → Replit API/WS
+window.RPS_BACKEND_URL = "https://rps.jakehoke.com"; // ← Pages → Replit API/WS
 
 if (RPS_CONFIG_LOGGING) {
   console.log(

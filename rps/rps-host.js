@@ -76,6 +76,14 @@ class RPSTournamentHost {
     return this.config;
   }
 
+  buildJoinUrl(code) {
+    const c = (code || this.code || "").toUpperCase();
+    const backend = (window.RPS_BACKEND_URL || "").replace(/\/$/, "");
+    if (backend) return `${backend}/join?room=${c}`;
+    const path = this.config?.joinPath || "/join";
+    return `${this.publicBase()}${path}?room=${c}`;
+  }
+
   qrUrl(text) {
     return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=12&data=${encodeURIComponent(text)}`;
   }
@@ -200,8 +208,13 @@ class RPSTournamentHost {
     this.state = data;
     if (!this.code && data.code) {
       this.code = data.code;
-      this.joinUrl = data.joinUrl || `${this.publicBase()}/join?room=${this.code}`;
-      rpsLog("Room ready", this.code);
+      this.joinUrl = this.buildJoinUrl(this.code);
+      rpsLog("Room ready", { code: this.code, joinUrl: this.joinUrl });
+    }
+    // Prefer Pages-configured backend URL for QR (avoid stale Replit preview hosts)
+    if (this.code) {
+      this.joinUrl = this.buildJoinUrl(this.code);
+      data.joinUrl = this.joinUrl;
     }
 
     if (data.phase === "champion" && !this._confettiDone) {
@@ -436,7 +449,7 @@ class RPSTournamentHost {
       return `<div class="rps-player-chip"><span class="rps-avatar">${p.initials}</span><span>✓ ${p.name}</span></div>`;
     }).join("");
 
-    const url = s.joinUrl || this.joinUrl || `${this.publicBase()}/join?room=${s.code}`;
+    const url = this.buildJoinUrl(s.code) || s.joinUrl || this.joinUrl;
     const statusCls = s.phase === "idle" ? "rps-status rps-status--pulse" : "rps-status";
     const soundIcon = s.soundEnabled ? "🔊" : "🔇";
 
