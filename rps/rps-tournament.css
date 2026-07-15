@@ -66,11 +66,14 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  position: relative;
+  z-index: 9999;
 }
 
 .rps-qr-panel.visible {
   width: 240px;
   opacity: 1;
+  z-index: 9999;
 }
 
 .rps-qr-placeholder {
@@ -92,6 +95,8 @@
 .rps-qr-mount,
 .rps-qr-mount img,
 .rps-qr-mount canvas {
+  position: relative;
+  z-index: 10000;
   width: 200px;
   height: 200px;
   border-radius: 8px;
